@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
 
 import java.util.Date;
 
@@ -18,9 +17,13 @@ import java.util.Date;
 public class SystemItemHistory {
 
     @Id
+    @Column(name = "identifier")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
+    private Long identifier;
+
     @Column(name = "id")
-    private Long id;
+    private String id;
 
     @Column(name = "url")
     private String url;
@@ -40,15 +43,19 @@ public class SystemItemHistory {
     private Long size;
 
     @OneToOne(mappedBy = "child")
+    @JsonIgnore
     private SystemItemHistory parent;
 
     @OneToOne(cascade = {CascadeType.REMOVE})
+    @JsonIgnore
     private SystemItemHistory child;
 
     @OneToOne(mappedBy = "previousVersion")
+    @JsonIgnore
     private SystemItem currentVersion;
 
-    public SystemItemHistory(String url, Date date, String parentId, SystemItemType type, Long size) {
+    public SystemItemHistory(String id, String url, Date date, String parentId, SystemItemType type, Long size) {
+        this.id = id;
         this.url = url;
         this.date = date;
         this.parentId = parentId;

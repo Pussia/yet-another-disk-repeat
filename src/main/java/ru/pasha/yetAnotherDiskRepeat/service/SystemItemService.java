@@ -8,12 +8,14 @@ import java.util.List;
 
 public interface SystemItemService {
 
-    List<SystemItem> saveAll(List<SystemItem> systemItems);
+    List<SystemItem> saveAllSystemItems(List<SystemItem> systemItems);
 
     void update(SystemItem newSystemItem, SystemItem oldSystemItem);
-    SystemItem deleteById(String id, String date);
+    SystemItem deleteSystemItemById(String id, String date);
     void updateDateForParents(SystemItem leaf, Date date);
     void updateSizeForParents(SystemItem leaf, Long size);
     void deleteHistory(SystemItemHistory systemItemHistory);
-    SystemItem findById(String id);
+    SystemItem findSystemItemById(String id);
+    List<SystemItem> findSystemItemByDate(String date);
+    List<SystemItemHistory> findHistoryById(String id, String dateStart, String dateEnd);
 }

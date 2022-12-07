@@ -17,6 +17,7 @@ import ru.pasha.yetAnotherDiskRepeat.validators.DateParser;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -29,7 +30,7 @@ public class SystemItemServiceImpl implements SystemItemService {
 
     @Override
     @Transactional
-    public List<SystemItem> saveAll(List<SystemItem> systemItems) {
+    public List<SystemItem> saveAllSystemItems(List<SystemItem> systemItems) {
         for (SystemItem systemItem : systemItems) {
             if (systemItem.getParentId() != null) {
                 Optional<SystemItem> parent = systemItemRepository.findById(systemItem.getParentId());
@@ -54,6 +55,7 @@ public class SystemItemServiceImpl implements SystemItemService {
     @Override
     public void update(SystemItem newSystemItem, SystemItem oldSystemItem) {
         SystemItemHistory systemItemHistory = new SystemItemHistory(
+                oldSystemItem.getId(),
                 oldSystemItem.getUrl(),
                 oldSystemItem.getDate(),
                 oldSystemItem.getParentId(),
@@ -73,7 +75,7 @@ public class SystemItemServiceImpl implements SystemItemService {
 
     @Transactional
     @Override
-    public SystemItem deleteById(String id, String date) {
+    public SystemItem deleteSystemItemById(String id, String date) {
         Optional<SystemItem> optionalSystemItem = systemItemRepository.findById(id);
         if (optionalSystemItem.isEmpty()) throw new SystemItemNotFoundException("Item not found");
 
@@ -113,11 +115,32 @@ public class SystemItemServiceImpl implements SystemItemService {
     }
 
     @Override
-    public SystemItem findById(String id) {
+    public SystemItem findSystemItemById(String id) {
         Optional<SystemItem> systemItem = systemItemRepository.findById(id);
 
         if (systemItem.isEmpty()) throw new SystemItemNotFoundException("Item not found");
 
         return systemItem.get();
+    }
+
+    @Override
+    public List<SystemItem> findSystemItemByDate(String date) {
+        Date parsedDate = dateParser.parse(date);
+        long topDateBorder = parsedDate.getTime();
+        long bottomDateBorder = Date.from(parsedDate.toInstant().minusSeconds(86400)).getTime();
+
+        return systemItemRepository.findAll().stream().filter(item -> {
+            return item.getDate().getTime() >= bottomDateBorder && item.getDate().getTime() <= topDateBorder;
+        }).toList();
+    }
+
+    @Override
+    public List<SystemItemHistory> findHistoryById(String id, String dateStart, String dateEnd) {
+        long parsedDateEnd = dateParser.parse(dateEnd).getTime();
+        long parsedDateStart = dateParser.parse(dateStart).getTime();
+
+        return systemItemHistoryRepository.findAll().stream().filter(item -> {
+            return item.getDate().getTime() >= parsedDateStart && item.getDate().getTime() < parsedDateEnd;
+        }).toList();
     }
 }

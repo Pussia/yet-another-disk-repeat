@@ -1,5 +1,4 @@
-Introductory task to Yandex backend school
-(Ended at the moment)
+RESTful cloud application
 
 <h4>Endpoints:</h4>
 1. /imports - save new System Item

@@ -1,9 +1,7 @@
 package ru.pasha.yetAnotherDiskRepeat.service;
 
 import jakarta.persistence.EntityManager;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pasha.yetAnotherDiskRepeat.domain.SystemItem;
@@ -17,7 +15,6 @@ import ru.pasha.yetAnotherDiskRepeat.validators.DateParser;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor

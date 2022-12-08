@@ -1,6 +1,5 @@
 package ru.pasha.yetAnotherDiskRepeat.service;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.pasha.yetAnotherDiskRepeat.domain.SystemItem;
